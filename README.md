@@ -1,111 +1,101 @@
-![Hermes Remote](https://img.shields.io/badge/Hermes-Remote-6366F1?style=for-the-badge)
-![Python](https://img.shields.io/badge/Python-3.10%2B-3776AB?style=flat-square&logo=python)
-![PowerShell](https://img.shields.io/badge/PowerShell-7-5391FE?style=flat-square&logo=powershell)
-![License](https://img.shields.io/badge/License-MIT-green?style=flat-square)
+# Hermes Remote — Source Evidence Archive
 
-**PC-side scripts for the Hermes Remote system — launchers and tools for use with a customized Hermes backend.**
+![Source guide to Hermes Remote embedded source evidence and stored UI image artifacts](docs/portfolio/overview.png)
 
----
+*Source guide drawn from the files in this repository; not a runtime screenshot or a fresh benchmark.*
 
-## 🖼️ Screenshots
+**An archive of selected Hermes mobile/PC integration source text and historical captures.**
+The implementation material is stored inside `source-evidence.json`, keyed by
+original file path. It is not laid out as a runnable `pc/` directory or an
+Android application checkout.
 
-![Remote UI](docs/screenshots/_ui3.png)
-*Remote control panel — command execution and session management.*
+This distinction matters: copying launcher commands from the older README
+cannot start a backend from the files actually present in this repository.
 
-![Files](docs/screenshots/_files.png)
-*Browse and transfer files between PC and phone.*
+## What the archive contains
 
-![Inbox](docs/screenshots/_inbox.png)
-*View and manage agent messages.*
+| Evidence area | Examples of embedded keys |
+|---|---|
+| PC dashboard launcher | `pc/hermes-dashboard.py`: health checks, dashboard startup, and pairing payload construction. |
+| Pairing utilities | `pc/render_qr.py`, `pc/phone_sim.py`, and `pc/qr_server.py`. |
+| Headless watchdog | `pc/hermes-watchdog-headless.py`: loopback probe and recovery-script invocation. |
+| Android client fragments | Connection management, REST/WebSocket transport, credential storage, and UI components. |
+| Build configuration fragments | Root/app Gradle scripts, settings, and Android manifest text. |
+| Historical findings | `PHASE0-FINDINGS.md` and `PROJECT-INDEX.md`. |
 
-![Hermes Check](pc/hermes-check.png)
-*System health check — verify Hermes backend status and connectivity.*
+These are **embedded text entries**, not separately available paths in this
+checkout. Some referenced support files and the external backend are absent.
 
----
+## Getting started: inspect, do not launch
 
-## 🏗️ Architecture
-
-```mermaid
-graph TB
-    subgraph Phone["📱 Android"]
-        APP[Hermes Mobile App<br/>Kotlin + Compose]
-    end
-    subgraph PC["💻 Windows PC"]
-        PY[Python Dashboard<br/>Flask/FastAPI]
-        PS[PowerShell Watchdog<br/>Service Monitor]
-        BR[WebSocket Broker<br/>Bidirectional Relay]
-        ART[Artifact Helper<br/>Node/esbuild]
-        HB[Customized<br/>Hermes Backend<br/>External Dependency]
-    end
-    APP <-->|WebSocket| BR
-    APP <-->|HTTP + QR| PY
-    BR --> HB
-    PY --> PS
-    PY --> ART
-    BR --> HB
-```
-
----
-
-## ⚠️ Prerequisites
-
-**This repository does not contain a complete standalone build.** The scripts here are launchers and tools designed to work with an **external customized Hermes backend** — you must already have one installed separately.
-
-Missing from this repo (because they belong to the external backend):
-- `pc/vendor/` — the customized Hermes distribution
-- `pc/requirements.txt` — backend Python dependencies
-- `gradle.properties` — Android build configuration
-- `gradlew.bat` — Gradle wrapper batch script
-
----
-
-## ✨ Features
-
-- **PowerShell watchdog** — keeps the backend alive, auto-restarts on crash
-- **Python dashboard** — web UI for monitoring and control
-- **QR pairing** — generates connection QR scanned by the phone
-- **Artifact helper** — Node/esbuild integration for frontend builds
-- **System health check** — `hermes-check.py` validates backend status
-
----
-
-## 🚀 Quick Start
+A Python 3 interpreter is sufficient to inspect the archive; no third-party
+package installation is required for these commands.
 
 ```bash
-# Requires an existing customized Hermes backend
-git clone https://github.com/MdSadman20040812/hermes-remote.git
+git clone https://github.com/MdSadman2004/hermes-remote.git
 cd hermes-remote
-
-# Install Python deps
-cd pc
-pip install -r requirements.txt  # if present, else use backend's
-
-# Start watchdog (keeps backend alive)
-.\hermes-watchdog.ps1
-
-# Start dashboard
-python hermes-dashboard.py
-# → http://localhost:8080
+python -c "import json; d=json.load(open('source-evidence.json', encoding='utf-8')); print('\n'.join(sorted(d)))"
 ```
 
----
+Read a specific embedded file without executing it:
 
-## 📁 Project Structure
-
-```
-hermes-remote/
-├── pc/
-│   ├── hermes-watchdog.ps1        # PowerShell service monitor
-│   ├── hermes-dashboard.py        # Python web dashboard
-│   ├── hermes-check.py            # System health check
-│   ├── hermes-broker.py           # WebSocket relay
-│   └── hermes-artifact-helper.py  # Frontend build integration
-├── docs/screenshots/               # UI screenshots
-└── README.md
+```bash
+python -c "import json; d=json.load(open('source-evidence.json', encoding='utf-8')); print(d['pc/hermes-watchdog-headless.py'])"
 ```
 
----
+For protocol context, inspect the archived findings:
 
-## 📄 License
+```bash
+python -c "import json; d=json.load(open('source-evidence.json', encoding='utf-8')); print(d['PHASE0-FINDINGS.md'])"
+```
 
-MIT © Md Sadman Bin Masud
+The findings distinguish earlier loopback probes from unresolved off-box
+networking/authentication work. Treat their dates, success statements, and
+machine paths as historical notes, not the state of your own installation.
+
+## Before attempting a reconstruction
+
+- Obtain a complete, compatible Hermes backend and Android client checkout.
+- Restore the missing project files, build wrapper, resources, and script dependencies.
+- Replace installation-specific paths and validate backend API compatibility.
+- Review authentication, TLS/network exposure, firewall policy, and secret handling.
+- Determine which historical launcher and authentication approach applies;
+  the archived files describe more than one stage of the integration.
+
+The embedded dashboard launcher invokes an external Python environment and
+uses port `9119`, not the older README's claimed standalone server on `8080`.
+The QR renderer imports `qrcode`; the launcher and watchdog depend on files
+outside this archive. Those observations are not a complete installation recipe.
+
+## Source guide
+
+| Repository path | What can be inspected |
+|---|---|
+| [Source evidence](source-evidence.json) | Embedded file texts and their original path keys. |
+| [Stored UI capture](docs/screenshots/_ui3.png) | Historical image artifact; not a fresh runtime verification. |
+| [Stored files capture](docs/screenshots/_files.png) | Historical image artifact; not evidence of a working transfer today. |
+| [Stored operations capture](docs/screenshots/_ops3.png) | Additional archived image. |
+
+The source-guide diagram points to these actual repository artifacts,
+not to nonexistent standalone `pc/` or `app/` directories.
+
+## Scope & limitations
+
+- This is an evidence archive, not a standalone build or supported deployment bundle.
+- No backend, Android build, phone pairing, or remote transfer was run for this refresh.
+- Archived launcher text can bind all network interfaces and print login or QR
+  credentials. Do not execute it unchanged or expose that output publicly.
+- The watchdog refers to `hermes-watchdog.ps1`, which is not an embedded entry;
+  other historical notes also reference files outside the archive.
+- Embedded Kotlin/Gradle fragments do not establish a complete, reproducible APK build.
+- Existing captures were not recreated or used as the overview diagram.
+
+## License and provenance
+
+Original README notice: `MIT © Md Sadman Bin Masud`. The embedded `LICENSE`
+also identifies `Copyright (c) 2026 Md Sadman Bin Masud`.
+No standalone license file exists in this repository. The evidence JSON
+contains a historical `LICENSE` text entry, but this README does not extend
+that entry into a blanket grant for the archive or screenshots.
+Embedded historical notes retain their original attribution, including the
+`PROJECT-INDEX.md` attribution to Claude (Cowork).

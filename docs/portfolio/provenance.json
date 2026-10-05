@@ -1,0 +1,29 @@
+{
+  "kind": "source-guide",
+  "source_head": "3d2dfca41fef0f7315b6d78cb721625cb829514b",
+  "source_tree": "2aa103e8a7e499ce0d5013413ff910625cb49e1d",
+  "source_repository": "https://github.com/MdSadman2004/hermes-remote",
+  "nodes": [
+    {
+      "label": "Embedded source archive",
+      "path": "source-evidence.json",
+      "detail": "Original-path keys contain selected source and notes."
+    },
+    {
+      "label": "Stored UI capture",
+      "path": "docs/screenshots/_ui3.png",
+      "detail": "Historical image artifact; not a fresh runtime capture."
+    },
+    {
+      "label": "Stored files capture",
+      "path": "docs/screenshots/_files.png",
+      "detail": "Historical image artifact; no live-transfer claim."
+    }
+  ],
+  "caption": "Source guide drawn from repository files; not a runtime screenshot or fresh benchmark.",
+  "generated_by": "render_guides.py",
+  "image_dimensions": [
+    1600,
+    960
+  ]
+}
